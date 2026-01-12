@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Absensi Mobile - Karyawan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2a5298;
+            --primary-dark: #1e3c72;
+            --secondary: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 0;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+
+        .login-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .app-logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .app-logo i {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .app-logo h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .app-logo p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Main App */
+        .app-container {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .user-details h3 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .user-details p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .current-time {
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .time-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* Main Content */
+        .app-content {
+            flex: 1;
+            padding: 20px 15px;
+        }
+
+        /* Attendance Card */
+        .attendance-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .attendance-card h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .attendance-status {
+            font-size: 1rem;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .status-clockin {
+            background-color: rgba(40, 167, 69, 0.15);
+            color: var(--secondary);
+        }
+
+        .status-clockout {
+            background-color: rgba(220, 53, 69, 0.15);
+            color: var(--danger);
+        }
+
+        .status-working {
+            background-color: rgba(255, 193, 7, 0.15);
+            color: #856404;
+        }
+
+        .btn {
+            padding: 16px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-success {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Location Info */
+        .location-info {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .location-info i {
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .stat-work {
+            border-top: 4px solid var(--primary);
+        }
+
+        .stat-overtime {
+            border-top: 4px solid var(--warning);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background-color: rgba(42, 82, 152, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* History List */
+        .history-list {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .history-item {
+            padding: 18px 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-date {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1rem;
+        }
+
+        .history-time {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 3px;
+        }
+
+        .history-hours {
+            text-align: right;
+        }
+
+        .work-hours {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .overtime-badge {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #856404;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Footer Navigation */
+        .app-footer {
+            background-color: white;
+            border-top: 1px solid #eee;
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border-radius: 10px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background-color: rgba(42, 82, 152, 0.1);
+        }
+
+        .nav-item i {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (min-width: 768px) {
+            .app-container, .login-screen {
+                max-width: 500px;
+                margin: 0 auto;
+                border-left: 1px solid #eee;
+                border-right: 1px solid #eee;
+                min-height: 100vh;
+            }
+            
+            .login-container {
+                max-width: 450px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="app-logo">
+                <i class="fas fa-fingerprint"></i>
+                <h1>Absensi Mobile</h1>
+                <p>Login untuk mengakses aplikasi absensi</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="loginId"><i class="fas fa-id-card"></i> ID Karyawan</label>
+                <input type="text" id="loginId" placeholder="Masukkan ID karyawan">
+            </div>
+            
+            <div class="form-group">
+                <label for="loginPin"><i class="fas fa-lock"></i> PIN Absensi</label>
+                <input type="password" id="loginPin" placeholder="Masukkan PIN 4 digit" maxlength="4">
+            </div>
+            
+            <button class="btn btn-primary" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+            
+            <div class="text-center mt-20">
+                <p style="color: var(--gray); font-size: 0.9rem;">
+                    Gunakan ID dan PIN yang diberikan oleh perusahaan
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App (hidden until login) -->
+    <div class="app-container" id="appContainer">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <h3 id="userName">Nama Karyawan</h3>
+                        <p id="userId">ID: EMP001</p>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+            
+            <div class="current-time">
+                <div>Waktu Sekarang</div>
+                <div class="time-display" id="currentTime">--:--:--</div>
+                <div id="currentDate">-- --- ----</div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-content">
+            <!-- Attendance Card -->
+            <div class="attendance-card">
+                <h2><i class="fas fa-clock"></i> Absensi Hari Ini</h2>
+                
+                <div class="attendance-status" id="attendanceStatus">
+                    Status: Belum Absen
+                </div>
+                
+                <div id="clockInSection">
+                    <button class="btn btn-primary" id="clockInBtn">
+                        <i class="fas fa-sign-in-alt"></i> ABSEN MASUK
+                    </button>
+                    <p style="color: var(--gray); font-size: 0.9rem; margin-top: 10px;">
+                        Tekan tombol untuk absen masuk
+                    </p>
+                </div>
+                
+                <div id="clockOutSection" style="display: none;">
+                    <button class="btn btn-danger" id="clockOutBtn">
+                        <i class="fas fa-sign-out-alt"></i> ABSEN PULANG
+                    </button>
+                    <p style="color: var(--gray); font-size: 0.9rem; margin-top: 10px;">
+                        Tekan tombol untuk absen pulang
+                    </p>
+                </div>
+                
+                <div class="location-info" id="locationInfo">
+                    <i class="fas fa-map-marker-alt"></i> 
+                    <span id="locationText">Mengambil lokasi...</span>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats-container">
+                <div class="stat-card stat-work">
+                    <h3 id="todayWorkHours">0</h3>
+                    <p>Jam Kerja Hari Ini</p>
+                </div>
+                <div class="stat-card stat-overtime">
+                    <h3 id="todayOvertime">0</h3>
+                    <p>Jam Lembur Hari Ini</p>
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active" data-tab="history">Riwayat</div>
+                <div class="tab" data-tab="profile">Profil</div>
+                <div class="tab" data-tab="info">Info</div>
+            </div>
+            
+            <!-- Tab Contents -->
+            <div class="tab-content active" id="historyTab">
+                <h3 style="margin-bottom: 15px; color: var(--primary);">Riwayat Absensi 7 Hari Terakhir</h3>
+                
+                <div class="history-list" id="historyList">
+                    <!-- Riwayat akan dimuat di sini -->
+                </div>
+                
+                <div id="historyEmpty" class="empty-state">
+                    <i class="fas fa-history"></i>
+                    <h3>Belum ada riwayat absensi</h3>
+                    <p>Absen masuk dan pulang untuk melihat riwayat</p>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="profileTab">
+                <div class="attendance-card">
+                    <h3><i class="fas fa-user-circle"></i> Profil Karyawan</h3>
+                    
+                    <div class="form-group">
+                        <label>Nama Lengkap</label>
+                        <input type="text" id="profileName" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>ID Karyawan</label>
+                        <input type="text" id="profileId" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Jabatan</label>
+                        <input type="text" id="profilePosition" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Jam Kerja Normal</label>
+                        <input type="text" id="profileWorkHours" readonly>
+                    </div>
+                    
+                    <div class="stats-container mt-20">
+                        <div class="stat-card stat-work">
+                            <h3 id="totalWorkHours">0</h3>
+                            <p>Total Jam Kerja</p>
+                        </div>
+                        <div class="stat-card stat-overtime">
+                            <h3 id="totalOvertime">0</h3>
+                            <p>Total Lembur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="infoTab">
+                <div class="attendance-card">
+                    <h3><i class="fas fa-info-circle"></i> Informasi Aplikasi</h3>
+                    
+                    <div class="form-group">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;">Cara Penggunaan:</h4>
+                        <ol style="padding-left: 20px; margin-bottom: 20px;">
+                            <li style="margin-bottom: 8px;">Login dengan ID dan PIN</li>
+                            <li style="margin-bottom: 8px;">Tekan tombol "Absen Masuk" saat tiba di tempat kerja</li>
+                            <li style="margin-bottom: 8px;">Tekan tombol "Absen Pulang" saat akan pulang</li>
+                            <li style="margin-bottom: 8px;">Cek riwayat absensi di tab Riwayat</li>
+                        </ol>
+                        
+                        <h4 style="color: var(--primary); margin-bottom: 10px;">Perhitungan Lembur:</h4>
+                        <ul style="padding-left: 20px; margin-bottom: 20px;">
+                            <li style="margin-bottom: 8px;">Jam kerja normal: 8 jam/hari</li>
+                            <li style="margin-bottom: 8px;">Lembur dihitung setelah 8 jam kerja</li>
+                            <li style="margin-bottom: 8px;">Lembur dihitung per 30 menit</li>
+                        </ul>
+                        
+                        <p style="color: var(--gray); font-size: 0.9rem; text-align: center; margin-top: 20px;">
+                            Versi 1.0.0<br>
+                            Aplikasi Absensi Mobile
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Navigation -->
+        <footer class="app-footer">
+            <a href="#" class="nav-item active" data-nav="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" data-nav="history">
+                <i class="fas fa-history"></i>
+                <span>Riwayat</span>
+            </a>
+            <a href="#" class="nav-item" data-nav="profile">
+                <i class="fas fa-user"></i>
+                <span>Profil</span>
+            </a>
+            <a href="#" class="nav-item" data-nav="info">
+                <i class="fas fa-info-circle"></i>
+                <span>Info</span>
+            </a>
+        </footer>
+    </div>
+
+    <!-- Clock In Modal -->
+    <div class="modal" id="clockInModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-in-alt"></i> Absen Masuk</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label>Waktu Masuk</label>
+                <input type="text" id="modalClockInTime" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>Lokasi</label>
+                <textarea id="modalClockInLocation" rows="3" readonly></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Catatan (Opsional)</label>
+                <textarea id="clockInNote" rows="3" placeholder="Tambahkan catatan jika perlu"></textarea>
+            </div>
+            
+            <button class="btn btn-primary" id="confirmClockInBtn">
+                <i class="fas fa-check"></i> Konfirmasi Absen Masuk
+            </button>
+        </div>
+    </div>
+
+    <!-- Clock Out Modal -->
+    <div class="modal" id="clockOutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-out-alt"></i> Absen Pulang</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label>Waktu Masuk</label>
+                <input type="text" id="modalPreviousClockIn" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>Waktu Pulang</label>
+                <input type="text" id="modalClockOutTime" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>Lokasi</label>
+                <textarea id="modalClockOutLocation" rows="3" readonly></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Total Jam Kerja</label>
+                <input type="text" id="modalTotalHours" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>Lembur</label>
+                <input type="text" id="modalOvertime" readonly>
+            </div>
+            
+            <div class="form-group">
+                <label>Catatan (Opsional)</label>
+                <textarea id="clockOutNote" rows="3" placeholder="Tambahkan catatan jika perlu"></textarea>
+            </div>
+            
+            <button class="btn btn-danger" id="confirmClockOutBtn">
+                <i class="fas fa-check"></i> Konfirmasi Absen Pulang
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Data karyawan contoh (dalam aplikasi real, ini akan dari database)
+        const employees = [
+            { id: "EMP001", pin: "1234", name: "Budi Santoso", position: "Staff IT", normalHours: 8 },
+            { id: "EMP002", pin: "5678", name: "Sari Wijaya", position: "HR Manager", normalHours: 8 },
+            { id: "EMP003", pin: "9012", name: "Ahmad Fauzi", position: "Sales Executive", normalHours: 8 },
+            { id: "EMP004", pin: "3456", name: "Dewi Lestari", position: "Admin", normalHours: 7 },
+            { id: "EMP005", pin: "7890", name: "Rizky Pratama", position: "Supervisor", normalHours: 9 }
+        ];
+
+        // Data penyimpanan lokal
+        let attendanceRecords = JSON.parse(localStorage.getItem('attendanceRecords')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let currentLocation = null;
+
+        // Elemen DOM
+        const loginScreen = document.getElementById('loginScreen');
+        const appContainer = document.getElementById('appContainer');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginIdInput = document.getElementById('loginId');
+        const loginPinInput = document.getElementById('loginPin');
+        
+        // User info
+        const userNameElement = document.getElementById('userName');
+        const userIdElement = document.getElementById('userId');
+        
+        // Time elements
+        const currentTimeElement = document.getElementById('currentTime');
+        const currentDateElement = document.getElementById('currentDate');
+        
+        // Attendance elements
+        const attendanceStatus = document.getElementById('attendanceStatus');
+        const clockInSection = document.getElementById('clockInSection');
+        const clockOutSection = document.getElementById('clockOutSection');
+        const clockInBtn = document.getElementById('clockInBtn');
+        const clockOutBtn = document.getElementById('clockOutBtn');
+        const locationInfo = document.getElementById('locationInfo');
+        const locationText = document.getElementById('locationText');
+        
+        // Stats elements
+        const todayWorkHoursElement = document.getElementById('todayWorkHours');
+        const todayOvertimeElement = document.getElementById('todayOvertime');
+        const totalWorkHoursElement = document.getElementById('totalWorkHours');
+        const totalOvertimeElement = document.getElementById('totalOvertime');
+        
+        // Profile elements
+        const profileName = document.getElementById('profileName');
+        const profileId = document.getElementById('profileId');
+        const profilePosition = document.getElementById('profilePosition');
+        const profileWorkHours = document.getElementById('profileWorkHours');
+        
+        // History elements
+        const historyList = document.getElementById('historyList');
+        const historyEmpty = document.getElementById('historyEmpty');
+        
+        // Modal elements
+        const clockInModal = document.getElementById('clockInModal');
+        const clockOutModal = document.getElementById('clockOutModal');
+        const closeModalButtons = document.querySelectorAll('.close-modal');
+        const confirmClockInBtn = document.getElementById('confirmClockInBtn');
+        const confirmClockOutBtn = document.getElementById('confirmClockOutBtn');
+        
+        // Tab elements
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        // Fungsi untuk memperbarui waktu saat ini
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID');
+            const dateString = now.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            currentTimeElement.textContent = timeString;
+            currentDateElement.textContent = dateString;
+        }
+
+        // Fungsi untuk mendapatkan lokasi pengguna
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        currentLocation = { lat, lng };
+                        
+                        // Reverse geocoding sederhana (dalam aplikasi real akan menggunakan API)
+                        locationText.textContent = `Lokasi: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                        locationText.innerHTML += `<br><small style="color: var(--gray);">Lokasi berhasil dideteksi</small>`;
+                    },
+                    (error) => {
+                        console.error("Error getting location:", error);
+                        locationText.textContent = "Lokasi: Tidak dapat mengakses lokasi";
+                        currentLocation = { lat: 0, lng: 0 };
+                    }
+                );
+            } else {
+                locationText.textContent = "Lokasi: Browser tidak mendukung geolocation";
+                currentLocation = { lat: 0, lng: 0 };
+            }
+        }
+
+        // Fungsi untuk format waktu
+        function formatTime(date) {
+            if (!date) return "-";
+            return date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Fungsi untuk format tanggal
+        function formatDate(date) {
+            if (!date) return "-";
+            return date.toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        // Fungsi untuk format tanggal lengkap
+        function formatFullDate(date) {
+            if (!date) return "-";
+            return date.toLocaleDateString('id-ID', { 
+                weekday: 'long',
+                day: 'numeric', 
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+
+        // Fungsi untuk menghitung selisih jam
+        function calculateHours(startTime, endTime) {
+            if (!startTime || !endTime) return 0;
+            
+            const diffMs = endTime - startTime;
+            const diffHours = diffMs / (1000 * 60 * 60);
+            
+            return Math.round(diffHours * 100) / 100;
+        }
+
+        // Fungsi untuk menghitung lembur
+        function calculateOvertime(workHours, normalHours) {
+            if (workHours <= normalHours) return 0;
+            
+            const overtime = workHours - normalHours;
+            // Bulatkan ke 0.5 jam terdekat
+            return Math.round(overtime * 2) / 2;
+        }
+
+        // Fungsi untuk memeriksa status absensi hari ini
+        function checkTodayAttendance() {
+            if (!currentUser) return;
+            
+            const today = new Date().toDateString();
+            const todayRecord = attendanceRecords.find(record => 
+                record.employeeId === currentUser.id && 
+                new Date(record.clockIn).toDateString() === today
+            );
+            
+            if (todayRecord) {
+                if (todayRecord.clockOut) {
+                    // Sudah absen pulang
+                    attendanceStatus.textContent = `Status: Sudah absen pulang pukul ${formatTime(new Date(todayRecord.clockOut))}`;
+                    attendanceStatus.className = "attendance-status status-clockout";
+                    clockInSection.style.display = "none";
+                    clockOutSection.style.display = "none";
+                    
+                    // Hitung jam kerja hari ini
+                    const workHours = calculateHours(
+                        new Date(todayRecord.clockIn),
+                        new Date(todayRecord.clockOut)
+                    );
+                    
+                    const overtime = calculateOvertime(workHours, currentUser.normalHours);
+                    
+                    todayWorkHoursElement.textContent = workHours.toFixed(1);
+                    todayOvertimeElement.textContent = overtime.toFixed(1);
+                } else {
+                    // Sudah absen masuk, belum pulang
+                    attendanceStatus.textContent = `Status: Sedang bekerja (masuk pukul ${formatTime(new Date(todayRecord.clockIn))})`;
+                    attendanceStatus.className = "attendance-status status-working";
+                    clockInSection.style.display = "none";
+                    clockOutSection.style.display = "block";
+                    
+                    // Hitung jam kerja sampai sekarang
+                    const workHours = calculateHours(
+                        new Date(todayRecord.clockIn),
+                        new Date()
+                    );
+                    
+                    todayWorkHoursElement.textContent = workHours.toFixed(1);
+                    todayOvertimeElement.textContent = "0";
+                }
+            } else {
+                // Belum absen sama sekali
+                attendanceStatus.textContent = "Status: Belum absen masuk";
+                attendanceStatus.className = "attendance-status";
+                clockInSection.style.display = "block";
+                clockOutSection.style.display = "none";
+                
+                todayWorkHoursElement.textContent = "0";
+                todayOvertimeElement.textContent = "0";
+            }
+        }
+
+        // Fungsi untuk menampilkan riwayat absensi
+        function renderAttendanceHistory() {
+            if (!currentUser) return;
+            
+            const userRecords = attendanceRecords
+                .filter(record => record.employeeId === currentUser.id)
+                .sort((a, b) => new Date(b.clockIn) - new Date(a.clockIn))
+                .slice(0, 7); // Tampilkan 7 hari terakhir
+            
+            historyList.innerHTML = "";
+            
+            if (userRecords.length === 0) {
+                historyEmpty.style.display = "block";
+                return;
+            }
+            
+            historyEmpty.style.display = "none";
+            
+            userRecords.forEach(record => {
+                const clockInDate = new Date(record.clockIn);
+                const clockOutDate = record.clockOut ? new Date(record.clockOut) : null;
+                
+                const workHours = calculateHours(clockInDate, clockOutDate || new Date());
+                const overtime = calculateOvertime(workHours, currentUser.normalHours);
+                
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                historyItem.innerHTML = `
+                    <div>
+                        <div class="history-date">${formatFullDate(clockInDate)}</div>
+                        <div class="history-time">
+                            Masuk: ${formatTime(clockInDate)} | 
+                            ${clockOutDate ? `Pulang: ${formatTime(clockOutDate)}` : 'Belum pulang'}
+                        </div>
+                    </div>
+                    <div class="history-hours">
+                        <div class="work-hours">${workHours.toFixed(1)} jam</div>
+                        ${overtime > 0 ? `<div class="overtime-badge">+${overtime.toFixed(1)} lembur</div>` : ''}
+                    </div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        // Fungsi untuk menghitung statistik
+        function calculateStatistics() {
+            if (!currentUser) return;
+            
+            const userRecords = attendanceRecords.filter(record => record.employeeId === currentUser.id);
+            
+            let totalWork = 0;
+            let totalOvertime = 0;
+            
+            userRecords.forEach(record => {
+                if (record.clockOut) {
+                    const workHours = calculateHours(
+                        new Date(record.clockIn),
+                        new Date(record.clockOut)
+                    );
+                    
+                    totalWork += workHours;
+                    totalOvertime += calculateOvertime(workHours, currentUser.normalHours);
+                }
+            });
+            
+            totalWorkHoursElement.textContent = totalWork.toFixed(1);
+            totalOvertimeElement.textContent = totalOvertime.toFixed(1);
+        }
+
+        // Fungsi untuk mengisi data profil
+        function loadProfileData() {
+            if (!currentUser) return;
+            
+            profileName.value = currentUser.name;
+            profileId.value = currentUser.id;
+            profilePosition.value = currentUser.position;
+            profileWorkHours.value = `${currentUser.normalHours} jam/hari`;
+        }
+
+        // Fungsi login
+        function login() {
+            const id = loginIdInput.value.trim().toUpperCase();
+            const pin = loginPinInput.value.trim();
+            
+            if (!id || !pin) {
+                alert("Harap masukkan ID dan PIN");
+                return;
+            }
+            
+            // Cari karyawan dengan ID dan PIN yang cocok
+            const employee = employees.find(emp => emp.id === id && emp.pin === pin);
+            
+            if (!employee) {
+                alert("ID atau PIN salah. Silakan coba lagi.");
+                return;
+            }
+            
+            // Set current user
+            currentUser = {
+                id: employee.id,
+                name: employee.name,
+                position: employee.position,
+                normalHours: employee.normalHours
+            };
+            
+            // Simpan ke localStorage
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Update UI
+            userNameElement.textContent = currentUser.name;
+            userIdElement.textContent = `ID: ${currentUser.id}`;
+            
+            // Tampilkan aplikasi, sembunyikan login
+            loginScreen.style.display = "none";
+            appContainer.style.display = "flex";
+            
+            // Update data
+            checkTodayAttendance();
+            renderAttendanceHistory();
+            calculateStatistics();
+            loadProfileData();
+            
+            // Reset form login
+            loginIdInput.value = "";
+            loginPinInput.value = "";
+        }
+
+        // Fungsi logout
+        function logout() {
+            if (confirm("Apakah Anda yakin ingin logout?")) {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                
+                // Kembali ke login screen
+                appContainer.style.display = "none";
+                loginScreen.style.display = "flex";
+            }
+        }
+
+        // Fungsi absen masuk
+        function clockIn() {
+            const now = new Date();
+            
+            // Update modal
+            document.getElementById('modalClockInTime').value = `${formatFullDate(now)}, ${formatTime(now)}`;
+            document.getElementById('modalClockInLocation').value = currentLocation 
+                ? `Lat: ${currentLocation.lat.toFixed(6)}, Lng: ${currentLocation.lng.toFixed(6)}`
+                : "Lokasi tidak tersedia";
+            
+            // Tampilkan modal
+            clockInModal.style.display = "flex";
+        }
+
+        // Fungsi konfirmasi absen masuk
+        function confirmClockIn() {
+            const now = new Date();
+            const note = document.getElementById('clockInNote').value.trim();
+            
+            // Cek apakah sudah absen hari ini
+            const today = now.toDateString();
+            const existingRecord = attendanceRecords.find(record => 
+                record.employeeId === currentUser.id && 
+                new Date(record.clockIn).toDateString() === today
+            );
+            
+            if (existingRecord) {
+                alert("Anda sudah melakukan absen masuk hari ini.");
+                clockInModal.style.display = "none";
+                return;
+            }
+            
+            // Tambahkan record baru
+            attendanceRecords.push({
+                employeeId: currentUser.id,
+                clockIn: now.toISOString(),
+                clockOut: null,
+                location: currentLocation,
+                note: note || null
+            });
+            
+            // Simpan ke localStorage
+            localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
+            
+            // Update UI
+            checkTodayAttendance();
+            renderAttendanceHistory();
+            
+            // Tutup modal dan reset form
+            clockInModal.style.display = "none";
+            document.getElementById('clockInNote').value = "";
+            
+            alert("Absen masuk berhasil!");
+        }
+
+        // Fungsi absen pulang
+        function clockOut() {
+            const now = new Date();
+            const today = now.toDateString();
+            
+            // Cari record absen masuk hari ini
+            const todayRecord = attendanceRecords.find(record => 
+                record.employeeId === currentUser.id && 
+                new Date(record.clockIn).toDateString() === today &&
+                !record.clockOut
+            );
+            
+            if (!todayRecord) {
+                alert("Anda belum absen masuk hari ini.");
+                return;
+            }
+            
+            const clockInTime = new Date(todayRecord.clockIn);
+            const workHours = calculateHours(clockInTime, now);
+            const overtime = calculateOvertime(workHours, currentUser.normalHours);
+            
+            // Update modal
+            document.getElementById('modalPreviousClockIn').value = `${formatFullDate(clockInTime)}, ${formatTime(clockInTime)}`;
+            document.getElementById('modalClockOutTime').value = `${formatFullDate(now)}, ${formatTime(now)}`;
+            document.getElementById('modalClockOutLocation').value = currentLocation 
+                ? `Lat: ${currentLocation.lat.toFixed(6)}, Lng: ${currentLocation.lng.toFixed(6)}`
+                : "Lokasi tidak tersedia";
+            document.getElementById('modalTotalHours').value = `${workHours.toFixed(1)} jam`;
+            document.getElementById('modalOvertime').value = overtime > 0 ? `${overtime.toFixed(1)} jam` : "Tidak ada";
+            
+            // Tampilkan modal
+            clockOutModal.style.display = "flex";
+        }
+
+        // Fungsi konfirmasi absen pulang
+        function confirmClockOut() {
+            const now = new Date();
+            const today = now.toDateString();
+            const note = document.getElementById('clockOutNote').value.trim();
+            
+            // Cari record absen masuk hari ini
+            const todayRecordIndex = attendanceRecords.findIndex(record => 
+                record.employeeId === currentUser.id && 
+                new Date(record.clockIn).toDateString() === today &&
+                !record.clockOut
+            );
+            
+            if (todayRecordIndex === -1) {
+                alert("Data absen tidak ditemukan.");
+                clockOutModal.style.display = "none";
+                return;
+            }
+            
+            // Update record dengan waktu pulang
+            attendanceRecords[todayRecordIndex].clockOut = now.toISOString();
+            attendanceRecords[todayRecordIndex].noteOut = note || null;
+            
+            // Simpan ke localStorage
+            localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
+            
+            // Update UI
+            checkTodayAttendance();
+            renderAttendanceHistory();
+            calculateStatistics();
+            
+            // Tutup modal dan reset form
+            clockOutModal.style.display = "none";
+            document.getElementById('clockOutNote').value = "";
+            
+            alert("Absen pulang berhasil!");
+        }
+
+        // Fungsi untuk menangani tab navigation
+        function handleTabClick(tabId) {
+            // Update tabs
+            tabs.forEach(tab => {
+                if (tab.dataset.tab === tabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Update tab contents
+            tabContents.forEach(content => {
+                if (content.id === `${tabId}Tab`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            
+            // Update nav items
+            navItems.forEach(nav => {
+                if (nav.dataset.nav === tabId) {
+                    nav.classList.add('active');
+                } else {
+                    nav.classList.remove('active');
+                }
+            });
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update waktu setiap detik
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            
+            // Ambil lokasi pengguna
+            getLocation();
+            
+            // Cek apakah sudah login
+            if (currentUser) {
+                userNameElement.textContent = currentUser.name;
+                userIdElement.textContent = `ID: ${currentUser.id}`;
+                
+                loginScreen.style.display = "none";
+                appContainer.style.display = "flex";
+                
+                checkTodayAttendance();
+                renderAttendanceHistory();
+                calculateStatistics();
+                loadProfileData();
+            }
+            
+            // Tambahkan data contoh jika tidak ada
+            if (attendanceRecords.length === 0) {
+                // Data contoh untuk pengujian
+                const now = new Date();
+                const yesterday = new Date(now);
+                yesterday.setDate(now.getDate() - 1);
+                
+                attendanceRecords = [
+                    {
+                        employeeId: "EMP001",
+                        clockIn: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 30).toISOString(),
+                        clockOut: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 17, 0).toISOString(),
+                        location: { lat: -6.2, lng: 106.8 },
+                        note: null
+                    },
+                    {
+                        employeeId: "EMP001",
+                        clockIn: new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 9, 0).toISOString(),
+                        clockOut: new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 18, 30).toISOString(),
+                        location: { lat: -6.2, lng: 106.8 },
+                        note: "Meeting klien"
+                    }
+                ];
+                
+                localStorage.setItem('attendanceRecords', JSON.stringify(attendanceRecords));
+            }
+        });
+
+        // Login button
+        loginBtn.addEventListener('click', login);
+        
+        // Enter key untuk login
+        loginPinInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+
+        // Logout button
+        logoutBtn.addEventListener('click', logout);
+
+        // Clock in/out buttons
+        clockInBtn.addEventListener('click', clockIn);
+        clockOutBtn.addEventListener('click', clockOut);
+
+        // Modal buttons
+        confirmClockInBtn.addEventListener('click', confirmClockIn);
+        confirmClockOutBtn.addEventListener('click', confirmClockOut);
+
+        // Close modal buttons
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                clockInModal.style.display = "none";
+                clockOutModal.style.display = "none";
+            });
+        });
+
+        // Close modal ketika klik di luar
+        window.addEventListener('click', function(e) {
+            if (e.target === clockInModal) {
+                clockInModal.style.display = "none";
+            }
+            if (e.target === clockOutModal) {
+                clockOutModal.style.display = "none";
+            }
+        });
+
+        // Tab navigation
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.dataset.tab;
+                handleTabClick(tabId);
+            });
+        });
+
+        // Bottom navigation
+        navItems.forEach(nav => {
+            nav.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navId = this.dataset.nav;
+                handleTabClick(navId);
+            });
+        });
+
+        // Tambahkan PWA manifest sederhana
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').catch(function(error) {
+                    console.log('ServiceWorker registration failed:', error);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
